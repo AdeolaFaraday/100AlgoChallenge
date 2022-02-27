@@ -1,0 +1,69 @@
+Cinemas in 2021
+Given an array of seats, return the maximum number of new people which can be seated, as long as there is at least a gap of 2 seats between people.
+
+Empty seats are given as 0.
+Occupied seats are given as 1.
+Don't move any seats which are already occupied, even if they are less than 2 seats apart. Consider only the gaps between new seats and existing seats.
+Examples
+maximumSeating([0, 0, 0, 1, 0, 0, 1, 0, 0, 0]) ➞ 2
+// [1, 0, 0, 1, 0, 0, 1, 0, 0, 1]
+
+maximumSeating([0, 0, 0, 0]) ➞ 2
+// [1, 0, 0, 1]
+
+maximumSeating([1, 0, 0, 0, 0, 1]) ➞ 0
+// There is no way to have a gap of at least 2 chairs when adding someone else.
+
+// My Solution
+
+const maximumSeating = (arr) => {
+const newArr = [...arr]
+let newAddition = 0;
+	for(let i=0; i<=arr.length - 1; i++){
+  	const slicedArrRight = newArr.slice(i)
+    const slicedArrLeft = newArr.slice(0, i)
+    const findLastIndex = slicedArrLeft.lastIndexOf(1)
+    const findIndex = slicedArrRight.indexOf(1)
+    console.log(slicedArrLeft, findLastIndex, slicedArrRight, findIndex)
+    const leftDistance = slicedArrLeft.length - findLastIndex
+    const rightDistance = findIndex
+    const difference = leftDistance + rightDistance
+    console.log(difference, leftDistance)
+    if(difference >= 6 && leftDistance == 3) {
+    	newArr[i] = 1
+      newAddition += 1
+    }
+    if(findLastIndex == -1 && findIndex == 2) {
+    	newArr[i - 1] = 1
+      newAddition += 1
+    }
+     if(findIndex == -1 && findLastIndex >= 0) {
+     if(slicedArrRight.length >= 3){
+       newArr[i + 2] = 1
+       newAddition += 1
+     }
+     
+    }
+    if(findLastIndex == -1 && findIndex == -1) {
+    	newArr[i] = 1
+      newAddition += 1
+    }
+    console.log(newArr)
+  }
+  return [newArr, newAddition]
+}
+
+console.log(maximumSeating([0, 0, 0, 1, 0, 0, 1, 0, 0, 0]))
+
+Test Against 
+
+Test.assertSimilar(maximumSeating([0, 0, 0, 1, 0, 0, 1, 0, 0, 0]), 2)
+Test.assertSimilar(maximumSeating([0, 0, 0, 0]), 2)
+Test.assertSimilar(maximumSeating([1, 0, 0, 0, 0, 0, 1]), 1)
+Test.assertSimilar(maximumSeating([1, 0, 0, 0, 0, 0, 0, 1]), 1)
+Test.assertSimilar(maximumSeating([1, 0, 0, 0, 0, 1]), 0, "Remember to keep a 2 chair gap on both sides!")
+Test.assertSimilar(maximumSeating([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), 4)
+Test.assertSimilar(maximumSeating([0]), 1)
+Test.assertSimilar(maximumSeating([0, 0]), 1)
+Test.assertSimilar(maximumSeating([1]), 0)
+Test.assertSimilar(maximumSeating([0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0]), 1)
